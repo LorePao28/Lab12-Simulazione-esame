@@ -1,7 +1,4 @@
-/******************************************************************************************
-/ Queries to create a smaller version of IMDB database 
-/ For SQL Assignment from UpGrad. Created by Shreyas M
-/*****************************************************************************************/
+
 SET FOREIGN_KEY_CHECKS = 0;
 -- Creating and using the database 
 
