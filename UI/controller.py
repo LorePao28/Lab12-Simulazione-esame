@@ -41,7 +41,27 @@ class Controller:
         self._view.txt_result.controls.append(ft.Text(f"Numero di nodi: {nNodes}"))
         self._view.txt_result.controls.append(ft.Text(f"Numero di archi: {nEdges}"))
 
+        self._view.txt_result.controls.append(ft.Text("Top 5 archi:"))
+        topFive = self._model.getArchiMaggiori()
+        for a in topFive:
+            self._view.txt_result.controls.append(ft.Text(f"{a[0]} -> {a[1]} : {a[2]['weight']}"))
+
+        lenAllCC, largestCC = self._model.getConnectedComponents()
+        self._view.txt_result.controls.append(ft.Text(f"Il grafo ha {len(lenAllCC)} componenti connesse"))
+        self._view.txt_result.controls.append(ft.Text(f"La più grande componente connessa è lunga {len(largestCC)}"))
+        for n in largestCC:
+            self._view.txt_result.controls.append(ft.Text(n))
+
         self._view.update_page()
 
     def handleCammino(self, e):
-        pass
+        self._view.txt_result.controls.clear()
+        # Add input control here!
+
+        bestPath = self._model.getBestPathSol()
+        self._view.txt_result.controls.append(ft.Text(f"Trovato percorso di lunghezza massima {len(bestPath)}"))
+        self._view.txt_result.controls.append(ft.Text("Di seguito i nodi:"))
+        for a in bestPath:
+            self._view.txt_result.controls.append(ft.Text(f"{a} ({a.date_of_birth})"))
+
+        self._view.update_page()

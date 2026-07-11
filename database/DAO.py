@@ -49,13 +49,13 @@ class DAO():
         return results
 
     @staticmethod
-    def getAllActors(r1, r2):
+    def getAllEdges(r1, r2):
         conn = DBConnect.get_connection()
 
         results = []
 
         cursor = conn.cursor(dictionary=True)
-        query = """ select rm1.name_id, rm2.name_id, sum( cast(replace(replace(m.worlwide_gross_income, '$', ''),',', '') as unsigned)) as Weight
+        query = """ select rm1.name_id as Actor1, rm2.name_id as Actor2, sum( cast(replace(replace(m.worlwide_gross_income, '$', ''),',', '') as unsigned)) as Weight
                     from role_mapping rm1, role_mapping rm2, ratings r, names n1, names n2, movie m 
                     where rm1.movie_id = rm2.movie_id and r.movie_id = rm1.movie_id 
                     and m.id = rm1.movie_id and rm2.movie_id = m.id 
@@ -63,13 +63,13 @@ class DAO():
                     and rm1.name_id < rm2.name_id 
                     and m.worlwide_gross_income is not null
                     and m.worlwide_gross_income like '$%'
-                    and n1.date_of_birth is not null and n2.date_of_birth is not null and r.avg_rating between 1.2 and 2.7 
+                    and n1.date_of_birth is not null and n2.date_of_birth is not null and r.avg_rating between %s and %s 
                     group by rm1.name_id, rm2.name_id  """
 
         cursor.execute(query, (r1, r2))
 
         for row in cursor:
-            results.append(Actor(**row))
+            results.append((row['Actor1'], row['Actor2'], row['Weight']))
 
         cursor.close()
         conn.close()
